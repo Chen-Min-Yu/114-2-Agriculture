@@ -205,6 +205,34 @@ body{background:#0f1923;min-height:100vh;display:flex;align-items:center;justify
 /* Checkbox accent */
 input[type=checkbox]{accent-color:var(--g3)}
 
+/* ── NEW: QR badge, nav btn, edit mode, FAB, browse grid, region chips ── */
+.qr-badge{display:inline-flex;align-items:center;gap:3px;background:#e8f5e1;color:#2d5a27;border-radius:99px;padding:3px 8px;font-size:10px;font-weight:700;margin-top:4px}
+.nav-btn{background:#fff;border:1.5px solid var(--bd);border-radius:8px;padding:4px 9px;font-size:10px;font-weight:600;color:var(--g2);cursor:pointer;-webkit-tap-highlight-color:transparent;white-space:nowrap;flex-shrink:0;font-family:inherit}
+.nav-btn:active{background:var(--cream)}
+.tl-inner{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;flex:1}
+.tl-content{flex:1}
+.edit-ord{display:none;flex-direction:column;gap:2px;margin-top:2px}
+.edit-ord button{background:var(--cream);border:none;border-radius:6px;width:22px;height:22px;font-size:12px;cursor:pointer;display:grid;place-items:center;-webkit-tap-highlight-color:transparent;font-family:inherit}
+.add-spot-btn{display:none;width:100%;padding:12px;border:2px dashed var(--g3);border-radius:12px;background:rgba(74,140,63,.04);color:var(--g3);font-size:14px;font-weight:600;cursor:pointer;text-align:center;margin-top:8px;font-family:inherit;box-sizing:border-box}
+#s6.edit-mode .edit-ord{display:flex}
+#s6.edit-mode .add-spot-btn{display:block}
+.fab{position:absolute;right:16px;bottom:86px;z-index:500;text-align:center;opacity:0;pointer-events:none;transition:opacity .2s;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.fab.show{opacity:1;pointer-events:auto}
+.fab-btn{width:48px;height:48px;background:linear-gradient(135deg,var(--g2),var(--g3));border-radius:50%;display:grid;place-items:center;font-size:20px;box-shadow:0 4px 16px rgba(45,90,39,.4)}
+.fab-lbl{font-size:9px;color:var(--g3);font-weight:700;margin-top:3px}
+.rc{padding:8px 14px;border-radius:99px;font-size:13px;font-weight:500;cursor:pointer;border:1.5px solid var(--bd);background:#fff;color:var(--t2);-webkit-tap-highlight-color:transparent;transition:all .15s;white-space:nowrap;flex-shrink:0}
+.rc.sel{background:var(--g3);border-color:var(--g3);color:#fff}
+.m-count{font-size:12px;color:var(--g3);font-weight:600;background:rgba(74,140,63,.1);padding:3px 10px;border-radius:99px}
+.browse-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:0 20px}
+.bc{background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.07);cursor:pointer;-webkit-tap-highlight-color:transparent}
+.bc:active{transform:scale(.97)}
+.bc-img{height:90px;display:flex;align-items:center;justify-content:center;font-size:40px}
+.bc-body{padding:10px 12px 12px}
+.bc-name{font-size:14px;font-weight:700;margin-bottom:2px}
+.bc-loc{font-size:11px;color:var(--t3);margin-bottom:6px}
+.data-src{font-size:10px;color:var(--t3);margin-top:8px;padding-top:8px;border-top:1px solid rgba(0,0,0,.06)}
+.tutorial-tip{background:rgba(74,140,63,.07);border:1px solid rgba(74,140,63,.2);border-radius:12px;padding:12px 14px;margin-bottom:16px;display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--t2);line-height:1.6}
+
 /* ══════════════════════════════════ */
 /*  LOGIN / REGISTER / PREF SURVEY   */
 /* ══════════════════════════════════ */
@@ -324,7 +352,7 @@ input[type=checkbox]{accent-color:var(--g3)}
       </div>
       <div class="tabs">
         <div class="tab on" onclick="go('s2')"><span class="ti">🏠</span><span class="tl" style="color:var(--g3)">首頁</span></div>
-        <div class="tab" onclick="go('s3')"><span class="ti">🧭</span><span class="tl">探索</span></div>
+        <div class="tab" onclick="go('sBrowse')"><span class="ti">🧭</span><span class="tl">瀏覽</span></div>
         <div class="tab-scan" onclick="go('s7')">
           <div class="tab-scan-btn">
             <svg width="26" height="26" viewBox="0 0 26 26" fill="white" xmlns="http://www.w3.org/2000/svg">
@@ -338,6 +366,100 @@ input[type=checkbox]{accent-color:var(--g3)}
               <rect x="16" y="20" width="3" height="3"/><rect x="20" y="20" width="3" height="3"/>
             </svg>
           </div>
+          <span class="tab-scan-lbl">掃描</span>
+        </div>
+        <div class="tab" onclick="go('s5')"><span class="ti">📅</span><span class="tl">行程</span></div>
+        <div class="tab" onclick="go('s4')"><span class="ti">💬</span><span class="tl">AI</span></div>
+      </div>
+    </div>
+
+    <!-- ═══ sBrowse 分類瀏覽 ═══ -->
+    <div class="screen" id="sBrowse">
+      <div class="hm-hdr">
+        <div><div style="font-size:13px;color:#999;margin-bottom:2px">瀏覽所有主題</div><div style="font-size:22px;font-weight:800">農業文化<span style="color:var(--g3)">圖書館</span></div></div>
+        <div class="hm-av" onclick="go('s8')">👤</div>
+      </div>
+      <div class="srch"><span>🔍</span><span>搜尋文化主題、地點、季節…</span></div>
+      <!-- Category filter chips -->
+      <div class="hscroll" style="padding:0 20px;margin-bottom:20px">
+        <span class="chip cf" id="bAll" onclick="filterBrowse('all',this)">🌿 全部</span>
+        <span class="chip co" id="bTea" onclick="filterBrowse('tea',this)">🍵 茶文化</span>
+        <span class="chip co" id="bRice" onclick="filterBrowse('rice',this)">🌾 稻米</span>
+        <span class="chip co" id="bTribe" onclick="filterBrowse('tribe',this)">🌺 原住民</span>
+        <span class="chip co" id="bFruit" onclick="filterBrowse('fruit',this)">🍍 果物</span>
+        <span class="chip co" id="bCraft" onclick="filterBrowse('craft',this)">🎋 工藝</span>
+      </div>
+      <!-- Browse grid -->
+      <div class="browse-grid" id="browseGrid">
+        <div class="bc" onclick="go('s3')" data-cat="tea">
+          <div class="bc-img" style="background:linear-gradient(135deg,#c8e6c9,#a5d6a7)">🍵</div>
+          <div class="bc-body">
+            <div class="bc-name">高山茶文化</div>
+            <div class="bc-loc">南投・阿里山・坪林</div>
+            <div style="display:flex;gap:4px;flex-wrap:wrap;align-items:center">
+              <span class="chip ce" style="font-size:10px;padding:3px 8px">🍂 秋茶季</span>
+              <span class="qr-badge">📱 QR</span>
+            </div>
+          </div>
+        </div>
+        <div class="bc" onclick="go('s3')" data-cat="rice">
+          <div class="bc-img" style="background:linear-gradient(135deg,#fff9c4,#fff176)">🌾</div>
+          <div class="bc-body">
+            <div class="bc-name">池上稻米文化</div>
+            <div class="bc-loc">台東・花蓮</div>
+            <div style="display:flex;gap:4px;flex-wrap:wrap;align-items:center">
+              <span class="chip ce" style="font-size:10px;padding:3px 8px">🍂 秋收</span>
+              <span class="qr-badge">📱 QR</span>
+            </div>
+          </div>
+        </div>
+        <div class="bc" onclick="go('s3')" data-cat="tribe">
+          <div class="bc-img" style="background:linear-gradient(135deg,#ffe0b2,#ffcc80)">🌺</div>
+          <div class="bc-body">
+            <div class="bc-name">阿美族豐年祭</div>
+            <div class="bc-loc">花蓮・台東</div>
+            <div style="display:flex;gap:4px;flex-wrap:wrap">
+              <span class="chip ce" style="font-size:10px;padding:3px 8px">☀️ 7–8月</span>
+            </div>
+          </div>
+        </div>
+        <div class="bc" onclick="go('s3')" data-cat="fruit">
+          <div class="bc-img" style="background:linear-gradient(135deg,#f8bbd0,#f48fb1)">🍊</div>
+          <div class="bc-body">
+            <div class="bc-name">柿子文化</div>
+            <div class="bc-loc">苗栗・新竹</div>
+            <div style="display:flex;gap:4px;flex-wrap:wrap">
+              <span class="chip ce" style="font-size:10px;padding:3px 8px">🍂 10–11月</span>
+            </div>
+          </div>
+        </div>
+        <div class="bc" onclick="go('s3')" data-cat="fruit">
+          <div class="bc-img" style="background:linear-gradient(135deg,#dcedc8,#aed581)">🍍</div>
+          <div class="bc-body">
+            <div class="bc-name">鳳梨文化</div>
+            <div class="bc-loc">台南・屏東</div>
+            <div style="display:flex;gap:4px;flex-wrap:wrap">
+              <span class="chip ce" style="font-size:10px;padding:3px 8px">☀️ 5–8月</span>
+            </div>
+          </div>
+        </div>
+        <div class="bc" onclick="go('s3')" data-cat="craft">
+          <div class="bc-img" style="background:linear-gradient(135deg,#e8eaf6,#c5cae9)">🎋</div>
+          <div class="bc-body">
+            <div class="bc-name">竹藝傳統工藝</div>
+            <div class="bc-loc">南投竹山・嘉義</div>
+            <div style="display:flex;gap:4px;flex-wrap:wrap">
+              <span class="chip ce" style="font-size:10px;padding:3px 8px">🌿 全年</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="height:90px"></div>
+      <div class="tabs">
+        <div class="tab" onclick="go('s2')"><span class="ti">🏠</span><span class="tl">首頁</span></div>
+        <div class="tab on" onclick="go('sBrowse')"><span class="ti">🧭</span><span class="tl" style="color:var(--g3)">瀏覽</span></div>
+        <div class="tab-scan" onclick="go('s7')">
+          <div class="tab-scan-btn"><svg width="26" height="26" viewBox="0 0 26 26" fill="white" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="9" height="9" rx="1.5" fill="none" stroke="white" stroke-width="2"/><rect x="4" y="4" width="3" height="3"/><rect x="16" y="1" width="9" height="9" rx="1.5" fill="none" stroke="white" stroke-width="2"/><rect x="19" y="4" width="3" height="3"/><rect x="1" y="16" width="9" height="9" rx="1.5" fill="none" stroke="white" stroke-width="2"/><rect x="4" y="19" width="3" height="3"/><rect x="16" y="16" width="3" height="3"/><rect x="20" y="16" width="3" height="3"/><rect x="16" y="20" width="3" height="3"/><rect x="20" y="20" width="3" height="3"/></svg></div>
           <span class="tab-scan-lbl">掃描</span>
         </div>
         <div class="tab" onclick="go('s5')"><span class="ti">📅</span><span class="tl">行程</span></div>
@@ -359,6 +481,8 @@ input[type=checkbox]{accent-color:var(--g3)}
         <div class="ai-box">
           <div class="ai-lbl">🤖 AI 文化摘要</div>
           <div class="ai-txt">台灣高山茶文化發展於清末，在海拔 1000m 以上的山區種植。每年秋茶季（9–11月），晝夜溫差讓茶葉積累出獨特甘甜與茶香。採茶是純手工作業，一名熟練茶農一天僅能採約 3 公斤，是兼具農業智慧與文化意義的傳統。</div>
+          <div class="data-src">📊 資料來源：農業部茶及飲料作物改良場 2023・台灣茶葉產銷年報</div>
+          <div style="margin-top:8px"><span class="qr-badge">📱 現場 QR 導覽 支援</span></div>
         </div>
         <div style="font-size:16px;font-weight:700;margin-bottom:12px">可參與體驗</div>
         <div class="hscroll" style="margin-bottom:20px">
@@ -417,7 +541,7 @@ input[type=checkbox]{accent-color:var(--g3)}
     <div class="screen" id="s5">
       <div class="hdr"><div class="back" onclick="back()">←</div><div class="htitle">規劃農業文化行程</div></div>
       <div class="it-sec">
-        <div class="it-t">你想幾月去台灣？</div>
+        <div class="it-t" style="display:flex;align-items:center;justify-content:space-between">你想幾月去台灣？<span class="m-count" id="mCount">已選 1 個月份</span></div>
         <div class="m-grid">
           <div class="mb" onclick="selM(this)"><div class="mn">1月</div><div class="mh">柑橘</div></div>
           <div class="mb" onclick="selM(this)"><div class="mn">2月</div><div class="mh">油菜花</div></div>
@@ -431,6 +555,16 @@ input[type=checkbox]{accent-color:var(--g3)}
           <div class="mb sel" onclick="selM(this)"><div class="mn">10月</div><div class="mh">秋茶🍂</div></div>
           <div class="mb" onclick="selM(this)"><div class="mn">11月</div><div class="mh">柿子</div></div>
           <div class="mb" onclick="selM(this)"><div class="mn">12月</div><div class="mh">草莓</div></div>
+        </div>
+      </div>
+      <div class="it-sec">
+        <div class="it-t">出發地區</div>
+        <div class="hscroll">
+          <div class="rc" onclick="selR(this)">🏙️ 北部</div>
+          <div class="rc" onclick="selR(this)">⛰️ 中部</div>
+          <div class="rc" onclick="selR(this)">🌊 南部</div>
+          <div class="rc sel" onclick="selR(this)">🌾 東部</div>
+          <div class="rc" onclick="selR(this)">🏝️ 離島</div>
         </div>
       </div>
       <div class="it-sec">
@@ -457,11 +591,14 @@ input[type=checkbox]{accent-color:var(--g3)}
     <!-- ═══ S6 ITIN RESULT ═══ -->
     <div class="screen" id="s6">
       <div class="ir-hdr">
-        <div class="back" onclick="back()" style="background:rgba(255,255,255,.2);color:#fff;width:32px;height:32px;font-size:14px">←</div>
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <div class="back" onclick="back()" style="background:rgba(255,255,255,.2);color:#fff;width:32px;height:32px;font-size:14px">←</div>
+          <button id="editBtn" onclick="toggleEdit()" style="background:rgba(255,255,255,.2);border:none;color:#fff;padding:6px 14px;border-radius:99px;font-size:12px;font-weight:700;cursor:pointer;-webkit-tap-highlight-color:transparent;font-family:inherit">✏️ 編輯行程</button>
+        </div>
         <div style="margin-top:12px">
           <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;opacity:.7;margin-bottom:6px">🤖 AI 生成行程</div>
           <div style="font-size:22px;font-weight:800;margin-bottom:8px">秋茶季 · 2天1夜</div>
-          <div style="font-size:13px;opacity:.8;display:flex;gap:12px"><span>📅 10月</span><span>📍 台北出發</span><span>🍵 茶文化</span></div>
+          <div style="font-size:13px;opacity:.8;display:flex;gap:12px"><span>📅 10月</span><span>📍 東部出發</span><span>🍵 茶文化</span></div>
         </div>
       </div>
       <!-- Map -->
@@ -478,21 +615,22 @@ input[type=checkbox]{accent-color:var(--g3)}
       <!-- Timeline -->
       <div class="tl-wrap">
         <div class="d-hdr2"><div class="d-num">1</div><div style="font-size:15px;font-weight:700">Day 1 — 台北 → 南投鹿谷</div></div>
-        <div class="tl-item"><div class="tl-t">08:00</div><div><div class="tl-n">從台北高鐵出發</div><div class="tl-s">高鐵台中站轉客運前往鹿谷</div></div></div>
-        <div class="tl-item"><div class="tl-t">11:00</div><div><div class="tl-n">凍頂茶山 AI 導覽</div><div class="tl-s">掃 QR Code 了解凍頂文化起源</div></div></div>
-        <div class="tl-item"><div class="tl-t">13:00</div><div><div class="tl-n">農家午餐</div><div class="tl-s">茶葉入菜，了解農產食文化</div></div></div>
-        <div class="tl-item"><div class="tl-t">14:30</div><div><div class="tl-n">手工採茶體驗</div><div class="tl-s">親手體驗秋茶採收（限季節）</div></div></div>
-        <div class="tl-item"><div class="tl-t">18:00</div><div><div class="tl-n">農村民宿 Check-in</div><div class="tl-s">夜間與茶農交流文化故事</div></div></div>
+        <div class="tl-item"><div class="tl-t">08:00</div><div class="tl-inner"><div class="tl-content"><div class="tl-n">從台北高鐵出發</div><div class="tl-s">高鐵台中站轉客運前往鹿谷</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px"><button class="nav-btn" onclick="openNav('高鐵台中站')">🗺️ 導航</button><div class="edit-ord"><button onclick="moveUp(this)">↑</button><button onclick="moveDown(this)">↓</button></div></div></div></div>
+        <div class="tl-item"><div class="tl-t">11:00</div><div class="tl-inner"><div class="tl-content"><div class="tl-n">凍頂茶山 AI 導覽</div><div class="tl-s">掃 QR Code 了解凍頂文化起源</div><span class="qr-badge">📱 QR 導覽</span></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px"><button class="nav-btn" onclick="openNav('鹿谷鄉凍頂茶山')">🗺️ 導航</button><div class="edit-ord"><button onclick="moveUp(this)">↑</button><button onclick="moveDown(this)">↓</button></div></div></div></div>
+        <div class="tl-item"><div class="tl-t">13:00</div><div class="tl-inner"><div class="tl-content"><div class="tl-n">農家午餐</div><div class="tl-s">茶葉入菜，了解農產食文化</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px"><button class="nav-btn" onclick="openNav('鹿谷農家餐廳')">🗺️ 導航</button><div class="edit-ord"><button onclick="moveUp(this)">↑</button><button onclick="moveDown(this)">↓</button></div></div></div></div>
+        <div class="tl-item"><div class="tl-t">14:30</div><div class="tl-inner"><div class="tl-content"><div class="tl-n">手工採茶體驗</div><div class="tl-s">親手體驗秋茶採收（限季節）</div><span class="qr-badge">📱 QR 導覽</span></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px"><button class="nav-btn" onclick="openNav('凍頂春風茶園')">🗺️ 導航</button><div class="edit-ord"><button onclick="moveUp(this)">↑</button><button onclick="moveDown(this)">↓</button></div></div></div></div>
+        <div class="tl-item"><div class="tl-t">18:00</div><div class="tl-inner"><div class="tl-content"><div class="tl-n">農村民宿 Check-in</div><div class="tl-s">夜間與茶農交流文化故事</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px"><button class="nav-btn" onclick="openNav('鹿谷農村民宿')">🗺️ 導航</button><div class="edit-ord"><button onclick="moveUp(this)">↑</button><button onclick="moveDown(this)">↓</button></div></div></div></div>
 
         <div class="d-hdr2"><div class="d-num">2</div><div style="font-size:15px;font-weight:700">Day 2 — 阿里山達邦茶園</div></div>
-        <div class="tl-item"><div class="tl-t">07:30</div><div><div class="tl-n">晨間雲霧茶園巡禮</div><div class="tl-s">雲海與高山烏龍最美時刻</div></div></div>
-        <div class="tl-item"><div class="tl-t">10:00</div><div><div class="tl-n">達邦茶園 QR 體驗</div><div class="tl-s">鄒族農耕文化 AI 現場導覽</div></div></div>
-        <div class="tl-item"><div class="tl-t">13:00</div><div><div class="tl-n">製茶工坊 + 農特產</div><div class="tl-s">帶回自己手做的茶葉</div></div></div>
-        <div class="tl-item"><div class="tl-t">16:00</div><div><div class="tl-n">返台北</div><div class="tl-s">高鐵回程</div></div></div>
+        <div class="tl-item"><div class="tl-t">07:30</div><div class="tl-inner"><div class="tl-content"><div class="tl-n">晨間雲霧茶園巡禮</div><div class="tl-s">雲海與高山烏龍最美時刻</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px"><button class="nav-btn" onclick="openNav('阿里山達邦茶園')">🗺️ 導航</button><div class="edit-ord"><button onclick="moveUp(this)">↑</button><button onclick="moveDown(this)">↓</button></div></div></div></div>
+        <div class="tl-item"><div class="tl-t">10:00</div><div class="tl-inner"><div class="tl-content"><div class="tl-n">達邦茶園 QR 體驗</div><div class="tl-s">鄒族農耕文化 AI 現場導覽</div><span class="qr-badge">📱 QR 導覽</span></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px"><button class="nav-btn" onclick="openNav('達邦部落 阿里山')">🗺️ 導航</button><div class="edit-ord"><button onclick="moveUp(this)">↑</button><button onclick="moveDown(this)">↓</button></div></div></div></div>
+        <div class="tl-item"><div class="tl-t">13:00</div><div class="tl-inner"><div class="tl-content"><div class="tl-n">製茶工坊 + 農特產</div><div class="tl-s">帶回自己手做的茶葉</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px"><button class="nav-btn" onclick="openNav('阿里山製茶工坊')">🗺️ 導航</button><div class="edit-ord"><button onclick="moveUp(this)">↑</button><button onclick="moveDown(this)">↓</button></div></div></div></div>
+        <div class="tl-item"><div class="tl-t">16:00</div><div class="tl-inner"><div class="tl-content"><div class="tl-n">返台北</div><div class="tl-s">高鐵回程</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px"><button class="nav-btn" onclick="openNav('高鐵嘉義站')">🗺️ 導航</button><div class="edit-ord"><button onclick="moveUp(this)">↑</button><button onclick="moveDown(this)">↓</button></div></div></div></div>
+        <button class="add-spot-btn" onclick="addSpot()">＋ 新增景點</button>
       </div>
       <div style="height:80px"></div>
       <div class="save-bar">
-        <button class="btn bo" style="flex:.8;font-size:14px">🔖 儲存行程</button>
+        <button class="btn bo" style="flex:.8;font-size:14px">🔖 收藏行程</button>
         <button class="btn bg" style="font-size:14px" onclick="go('s7')">📱 開始體驗</button>
       </div>
     </div>
@@ -623,8 +761,8 @@ input[type=checkbox]{accent-color:var(--g3)}
         <div style="font-size:15px;font-weight:700;margin-bottom:12px">個人檔案照片</div>
         <div style="background:#fff;border-radius:14px;padding:24px 20px;box-shadow:0 2px 8px rgba(0,0,0,.06);text-align:center;border:2px dashed var(--bd)">
           <div style="font-size:36px;margin-bottom:8px">📷</div>
-          <div style="font-size:14px;font-weight:600;margin-bottom:4px;color:var(--t2)">上傳個人照片</div>
-          <div style="font-size:12px;color:var(--t3);line-height:1.6">讓農民認識你<br>提升體驗預訂成功率</div>
+          <div style="font-size:14px;font-weight:600;margin-bottom:4px;color:var(--t2)">設定頭像</div>
+          <div style="font-size:12px;color:var(--t3);line-height:1.6">選擇或上傳一張代表你的圖片<br>讓體驗紀錄更有溫度</div>
         </div>
       </div>
     </div>
@@ -719,7 +857,14 @@ input[type=checkbox]{accent-color:var(--g3)}
           </div>
         </div>
       </div>
-      <div style="height:90px"></div>
+      <!-- Tutorial hint -->
+      <div style="padding:0 20px;margin-bottom:12px">
+        <div class="tutorial-tip">
+          <div style="font-size:20px;flex-shrink:0">💡</div>
+          <div><div style="font-weight:700;margin-bottom:3px;color:var(--g2)">AI 如何生成文案？</div>系統會根據你填寫的產品特色、農場故事與文化類別，自動生成三種內容：<b>品牌文案</b>（吸引旅客）、<b>產品故事</b>（說明背後意義）、<b>產品角色</b>（IP 形象）。填寫越詳細，生成品質越好。</div>
+        </div>
+      </div>
+      <div style="height:20px"></div>
       <!-- Generate button -->
       <div style="padding:12px 20px 32px;position:sticky;bottom:0;background:rgba(253,251,247,.95);backdrop-filter:blur(12px);border-top:1px solid var(--bd)">
         <button class="btn bg" id="genBtn" onclick="showGenResult()" style="font-size:14px">🤖 AI 生成文案、產品故事、產品角色</button>
@@ -880,6 +1025,11 @@ input[type=checkbox]{accent-color:var(--g3)}
       </div>
     </div>
 
+    <!-- ── FLOATING CHATBOT FAB ── -->
+    <div class="fab" id="chatFab" onclick="go('s4')">
+      <div class="fab-btn">💬</div>
+      <div class="fab-lbl">AI助理</div>
+    </div>
   </div><!-- /screen-area -->
 </div><!-- /phone -->
 
@@ -891,6 +1041,7 @@ input[type=checkbox]{accent-color:var(--g3)}
   <div class="leg-row" onclick="go('sP')"><div class="dot" id="d-sP"></div><span>⓪ 偏好調查（初次）</span></div>
   <div class="leg-row" onclick="go('s1')"><div class="dot on" id="d-s1"></div><span>① 開場畫面</span></div>
   <div class="leg-row" onclick="go('s2')"><div class="dot" id="d-s2"></div><span>② 首頁</span></div>
+  <div class="leg-row" onclick="go('sBrowse')"><div class="dot" id="d-sBrowse"></div><span>② 分類瀏覽（NEW）</span></div>
   <div class="leg-row" onclick="go('s3')"><div class="dot" id="d-s3"></div><span>③ 文化詳情</span></div>
   <div class="leg-row" onclick="go('s4')"><div class="dot" id="d-s4"></div><span>④ AI 問答</span></div>
   <div class="leg-row" onclick="go('s5')"><div class="dot" id="d-s5"></div><span>⑤ 行程設定</span></div>
@@ -905,6 +1056,8 @@ input[type=checkbox]{accent-color:var(--g3)}
 
 <script>
 let cur='s1', hist=[];
+const FAB_SCREENS=['s2','sBrowse','s3','s5','s6'];
+
 function go(id){
   if(id===cur)return;
   const c=document.getElementById(cur), n=document.getElementById(id);
@@ -923,6 +1076,9 @@ function go(id){
   cur=id; upd();
   if(id==='s7') document.getElementById('sheet').classList.remove('show');
   document.getElementById('sbar').className='sbar'+(id==='s1'||id==='s7'||id==='sL'?' w':'');
+  const fab=document.getElementById('chatFab');
+  const showFab=FAB_SCREENS.includes(id)&&id!=='s4';
+  fab.classList.toggle('show', showFab);
 }
 function back(){
   if(!hist.length)return;
@@ -942,6 +1098,8 @@ function back(){
   },340);
   cur=p; upd();
   document.getElementById('sbar').className='sbar'+(p==='s1'||p==='s7'||p==='sL'?' w':'');
+  const fab=document.getElementById('chatFab');
+  fab.classList.toggle('show', FAB_SCREENS.includes(p)&&p!=='s4');
 }
 function upd(){
   document.querySelectorAll('.dot').forEach(d=>d.classList.remove('on'));
@@ -957,9 +1115,65 @@ function showGenResult(){
     document.getElementById('genSheet').classList.add('show');
   },1600);
 }
-function selM(el){ document.querySelectorAll('.mb').forEach(b=>b.classList.remove('sel')); el.classList.add('sel'); }
+
+// ── 月份：多選 + 計數器 ──
+function selM(el){
+  el.classList.toggle('sel');
+  const n=document.querySelectorAll('.mb.sel').length;
+  document.getElementById('mCount').textContent='已選 '+n+' 個月份';
+}
 function selI(el){ document.querySelectorAll('.ib').forEach(b=>b.classList.remove('sel')); el.classList.add('sel'); }
 function selD(el){ document.querySelectorAll('.dopt').forEach(b=>b.classList.remove('sel')); el.classList.add('sel'); }
+
+// ── 地區選擇（單選）──
+function selR(el){
+  document.querySelectorAll('.rc').forEach(r=>r.classList.remove('sel'));
+  el.classList.add('sel');
+}
+
+// ── S6 Edit Mode ──
+let editMode=false;
+function toggleEdit(){
+  editMode=!editMode;
+  const s6=document.getElementById('s6');
+  const btn=document.getElementById('editBtn');
+  s6.classList.toggle('edit-mode', editMode);
+  btn.textContent=editMode?'✅ 完成編輯':'✏️ 編輯行程';
+}
+function moveUp(btn){
+  const item=btn.closest('.tl-item');
+  const prev=item.previousElementSibling;
+  if(prev&&prev.classList.contains('tl-item')) item.parentNode.insertBefore(item,prev);
+}
+function moveDown(btn){
+  const item=btn.closest('.tl-item');
+  const next=item.nextElementSibling;
+  if(next&&next.classList.contains('tl-item')) item.parentNode.insertBefore(next,item);
+}
+function addSpot(){
+  const wrap=document.querySelector('#s6 .tl-wrap');
+  const addBtn=wrap.querySelector('.add-spot-btn');
+  const newItem=document.createElement('div');
+  newItem.className='tl-item';
+  newItem.innerHTML=`<div class="tl-t">??:??</div><div class="tl-inner"><div class="tl-content"><div class="tl-n" contenteditable="true" style="outline:none;border-bottom:1px dashed var(--g3);min-width:80px">新景點名稱</div><div class="tl-s">點此編輯說明</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px"><button class="nav-btn">🗺️ 導航</button><div class="edit-ord" style="display:flex"><button onclick="moveUp(this)">↑</button><button onclick="moveDown(this)">↓</button></div></div></div>`;
+  wrap.insertBefore(newItem, addBtn);
+  newItem.querySelector('[contenteditable]').focus();
+}
+
+// ── Google Maps navigation ──
+function openNav(place){
+  const url='https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(place+' 台灣');
+  window.open(url,'_blank');
+}
+
+// ── Browse filter ──
+function filterBrowse(cat, el){
+  document.querySelectorAll('#sBrowse .chip').forEach(c=>{c.className=c.className.replace(' cf',' co').replace('cf ','co ');});
+  el.className=el.className.replace('co','cf');
+  document.querySelectorAll('#browseGrid .bc').forEach(card=>{
+    card.style.display=(cat==='all'||card.dataset.cat===cat)?'':'none';
+  });
+}
 
 // ── Login / Register / Preference Survey ──
 let selectedRole='exp';
@@ -993,7 +1207,7 @@ function updPrefProg(){
 
 const AI={
   '行程':'好的！帶你去行程設定 📅',
-  '稻米':'台灣稻米文化以台東池上最有名！黃金稻海在 10 月達到最美，還有花蓮富里散布著金針花的稻田景觀 🌾',
+  '稻米':'台灣稻米文化以台東池上最有名！黃金稻海在 10 月達到最美，還有花蓮富里散布著金針花的稻田景觀 🌾\n\n📊 台灣每年稻米產量約 130 萬公噸（農業部 2023）',
   '豐年祭':'豐年祭是阿美族最重要的農業祭典，7–8 月稻米收成後舉行 🌺 花蓮的部落最為盛大，外國訪客需提前聯繫以示尊重。',
   '外國人':'非常歡迎外國旅客！許多農場和茶園都有英語解說，QR Code 導覽也支援英語和日語 🌍'
 };
