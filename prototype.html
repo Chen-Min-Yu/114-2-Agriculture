@@ -290,7 +290,7 @@ input[type=checkbox]{accent-color:var(--g3)}
 #tourOverlay{position:absolute;inset:0;z-index:9000;pointer-events:none;opacity:0;transition:opacity .3s}
 #tourOverlay.show{opacity:1;pointer-events:all}
 #tourMask{position:absolute;inset:0}
-.tour-tooltip{position:absolute;left:16px;right:16px;background:#fff;border-radius:20px;padding:20px;box-shadow:0 8px 32px rgba(0,0,0,.18);pointer-events:all}
+.tour-tooltip{position:absolute;left:16px;right:16px;background:#fff;border-radius:20px;padding:20px;box-shadow:0 8px 32px rgba(0,0,0,.18)}
 .tour-tooltip .tt-icon{font-size:32px;margin-bottom:8px}
 .tour-tooltip .tt-title{font-size:17px;font-weight:800;color:var(--text);margin-bottom:6px}
 .tour-tooltip .tt-body{font-size:14px;color:var(--t2);line-height:1.65;margin-bottom:18px}
@@ -2431,14 +2431,15 @@ function tourNext() {
 
 function endTour() {
   document.getElementById('tourOverlay').classList.remove('show');
-  localStorage.setItem('tourDone', '1');
+  _tourShown = true;
 }
 
+let _tourShown = false;
 // Hook into go() to trigger tour on first arrival at s2
 const _origGo = go;
 go = function(id) {
   _origGo(id);
-  if (id === 's2' && !localStorage.getItem('tourDone') && !document.getElementById('tourOverlay').classList.contains('show')) {
+  if (id === 's2' && !_tourShown && !document.getElementById('tourOverlay').classList.contains('show')) {
     setTimeout(startTour, 400);
   }
 };
