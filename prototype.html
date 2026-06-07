@@ -285,6 +285,22 @@ input[type=checkbox]{accent-color:var(--g3)}
 .style-card.sel .sn{color:var(--g2)}
 .prog-bar{height:4px;background:var(--bd);border-radius:99px}
 .prog-fill{height:100%;background:var(--g3);border-radius:99px;transition:width .4s ease}
+
+/* ── Onboarding Tour ── */
+#tourOverlay{position:absolute;inset:0;z-index:9000;pointer-events:none;opacity:0;transition:opacity .3s}
+#tourOverlay.show{opacity:1;pointer-events:all}
+#tourMask{position:absolute;inset:0}
+.tour-tooltip{position:absolute;left:16px;right:16px;background:#fff;border-radius:20px;padding:20px;box-shadow:0 8px 32px rgba(0,0,0,.18);pointer-events:all}
+.tour-tooltip .tt-icon{font-size:32px;margin-bottom:8px}
+.tour-tooltip .tt-title{font-size:17px;font-weight:800;color:var(--text);margin-bottom:6px}
+.tour-tooltip .tt-body{font-size:14px;color:var(--t2);line-height:1.65;margin-bottom:18px}
+.tour-tooltip .tt-row{display:flex;gap:10px;align-items:center}
+.tour-tooltip .tt-skip{flex:1;font-size:13px;color:var(--t3);cursor:pointer;text-align:left;background:none;border:none;font-family:inherit;padding:0}
+.tour-tooltip .tt-dots{display:flex;gap:5px;flex:1;justify-content:center}
+.tour-tooltip .tt-dot{width:6px;height:6px;border-radius:50%;background:var(--bd);transition:background .2s}
+.tour-tooltip .tt-dot.on{background:var(--g3)}
+.tour-tooltip .tt-next{padding:10px 20px;background:var(--g3);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap}
+#tourSpotlight{position:absolute;border-radius:14px;box-shadow:0 0 0 9999px rgba(0,0,0,.55);transition:all .35s cubic-bezier(.4,0,.2,1);pointer-events:none}
 </style>
 </head>
 <body>
@@ -292,6 +308,21 @@ input[type=checkbox]{accent-color:var(--g3)}
 <div class="phone">
   <div class="screen-area">
     <div class="island"></div>
+
+    <!-- ── Onboarding Tour Overlay ── -->
+    <div id="tourOverlay">
+      <div id="tourSpotlight"></div>
+      <div class="tour-tooltip" id="tourTooltip" style="bottom:110px">
+        <div class="tt-icon" id="ttIcon"></div>
+        <div class="tt-title" id="ttTitle"></div>
+        <div class="tt-body" id="ttBody"></div>
+        <div class="tt-row">
+          <button class="tt-skip" onclick="endTour()">跳過導覽</button>
+          <div class="tt-dots" id="ttDots"></div>
+          <button class="tt-next" id="ttNext" onclick="tourNext()">下一步</button>
+        </div>
+      </div>
+    </div>
 
     <!-- Status bar -->
     <div class="sbar" id="sbar"><span>9:41</span><span>▲▲▲</span></div>
@@ -624,19 +655,19 @@ input[type=checkbox]{accent-color:var(--g3)}
       <div class="sec-hdr"><div class="sec-t">本季推薦</div><div class="sec-m" onclick="go('sBrowse')" style="cursor:pointer">全部</div></div>
       <div class="hscroll" style="padding:0 20px;margin-bottom:24px">
         <div class="c-card hm-card" data-cat="tea" onclick="goDetail('tea')">
-          <div class="c-img" style="background:url('高山茶文化.png') center/cover no-repeat"></div>
+          <div class="c-img" style="background:url('assets/高山茶文化.png') center/cover no-repeat"></div>
           <div class="c-body"><div class="c-name">高山茶文化</div><div class="c-meta">南投 · 秋茶季</div></div>
         </div>
         <div class="c-card hm-card" data-cat="rice" onclick="goDetail('rice')">
-          <div class="c-img" style="background:url('池上稻米文化.png') center/cover no-repeat"></div>
+          <div class="c-img" style="background:url('assets/池上稻米文化.png') center/cover no-repeat"></div>
           <div class="c-body"><div class="c-name">池上稻米文化</div><div class="c-meta">台東 · 二期收割</div></div>
         </div>
         <div class="c-card hm-card" data-cat="tribe" onclick="goDetail('tribe')">
-          <div class="c-img" style="background:url('阿美族豐年祭.png') center/cover no-repeat"></div>
+          <div class="c-img" style="background:url('assets/阿美族豐年祭.png') center/cover no-repeat"></div>
           <div class="c-body"><div class="c-name">阿美族豐年祭</div><div class="c-meta">花蓮 · 7–8月</div></div>
         </div>
         <div class="c-card hm-card" data-cat="fruit" onclick="goDetail('persimmon')">
-          <div class="c-img" style="background:url('柿子文化.png') center/cover no-repeat"></div>
+          <div class="c-img" style="background:url('assets/柿子文化.png') center/cover no-repeat"></div>
           <div class="c-body"><div class="c-name">柿子文化</div><div class="c-meta">苗栗 · 10–11月</div></div>
         </div>
       </div>
@@ -644,27 +675,27 @@ input[type=checkbox]{accent-color:var(--g3)}
       <div class="sec-hdr"><div class="sec-t">近期農業活動</div><div class="sec-m">更多</div></div>
       <div class="act-list">
         <div class="act hm-act" data-cat="tea" onclick="goDetail('tea')">
-          <div class="act-ic" style="background:url('高山茶文化.png') center/cover no-repeat;border-radius:12px"></div>
+          <div class="act-ic" style="background:url('assets/高山茶文化.png') center/cover no-repeat;border-radius:12px"></div>
           <div style="flex:1"><div class="act-n">凍頂烏龍秋茶體驗</div><div class="act-m">南投鹿谷 · 10/1–11/15</div></div>
           <div class="badge" style="background:rgba(74,140,63,.1);color:#2d5a27">進行中</div>
         </div>
         <div class="act hm-act" data-cat="rice" onclick="goDetail('rice')">
-          <div class="act-ic" style="background:url('池上稻米文化.png') center/cover no-repeat;border-radius:12px"></div>
+          <div class="act-ic" style="background:url('assets/池上稻米文化.png') center/cover no-repeat;border-radius:12px"></div>
           <div style="flex:1"><div class="act-n">池上稻穗收割節</div><div class="act-m">台東池上 · 10/15–10/31</div></div>
           <div class="badge" style="background:rgba(255,152,0,.1);color:#e65100">即將開始</div>
         </div>
         <div class="act hm-act" data-cat="fruit" onclick="goDetail('persimmon')">
-          <div class="act-ic" style="background:url('柿子文化.png') center/cover no-repeat;border-radius:12px"></div>
+          <div class="act-ic" style="background:url('assets/柿子文化.png') center/cover no-repeat;border-radius:12px"></div>
           <div style="flex:1"><div class="act-n">苗栗大湖柿子季</div><div class="act-m">苗栗大湖 · 10/1–11/30</div></div>
           <div class="badge" style="background:rgba(74,140,63,.1);color:#2d5a27">進行中</div>
         </div>
       </div>
       <div style="height:16px"></div>
       </div><!-- /home-scroll -->
-      <div class="tabs">
-        <div class="tab on" onclick="go('s2')"><span class="ti"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg></span><span class="tl" style="color:var(--g3)">首頁</span></div>
-        <div class="tab" onclick="go('sBrowse')"><span class="ti"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg></span><span class="tl">瀏覽</span></div>
-        <div class="tab-scan" onclick="go('s7')">
+      <div class="tabs" id="mainTabs">
+        <div class="tab on" id="tour-tab-home" onclick="go('s2')"><span class="ti"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg></span><span class="tl" style="color:var(--g3)">首頁</span></div>
+        <div class="tab" id="tour-tab-browse" onclick="go('sBrowse')"><span class="ti"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg></span><span class="tl">瀏覽</span></div>
+        <div class="tab-scan" id="tour-tab-scan" onclick="go('s7')">
           <div class="tab-scan-btn">
             <svg width="26" height="26" viewBox="0 0 26 26" fill="white" xmlns="http://www.w3.org/2000/svg">
               <rect x="1" y="1" width="9" height="9" rx="1.5" fill="none" stroke="white" stroke-width="2"/>
@@ -679,7 +710,7 @@ input[type=checkbox]{accent-color:var(--g3)}
           </div>
           <span class="tab-scan-lbl">掃描</span>
         </div>
-        <div class="tab" onclick="go('sTripList')"><span class="ti"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span><span class="tl">行程</span></div>
+        <div class="tab" id="tour-tab-trip" onclick="go('sTripList')"><span class="ti"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span><span class="tl">行程</span></div>
         <div class="tab" onclick="go('s9')"><span class="ti"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></span><span class="tl">個人檔案</span></div>
       </div>
     </div>
@@ -704,7 +735,7 @@ input[type=checkbox]{accent-color:var(--g3)}
       <!-- Browse grid -->
       <div class="browse-grid" id="browseGrid">
         <div class="bc" onclick="goDetail('tea')" data-cat="tea">
-          <div class="bc-img" style="background:url('高山茶文化.png') center/cover no-repeat"></div>
+          <div class="bc-img" style="background:url('assets/高山茶文化.png') center/cover no-repeat"></div>
           <div class="bc-body">
             <div class="bc-name">高山茶文化</div>
             <div class="bc-loc">南投・阿里山・坪林</div>
@@ -715,7 +746,7 @@ input[type=checkbox]{accent-color:var(--g3)}
           </div>
         </div>
         <div class="bc" onclick="goDetail('rice')" data-cat="rice">
-          <div class="bc-img" style="background:url('池上稻米文化.png') center/cover no-repeat"></div>
+          <div class="bc-img" style="background:url('assets/池上稻米文化.png') center/cover no-repeat"></div>
           <div class="bc-body">
             <div class="bc-name">池上稻米文化</div>
             <div class="bc-loc">台東・花蓮</div>
@@ -726,7 +757,7 @@ input[type=checkbox]{accent-color:var(--g3)}
           </div>
         </div>
         <div class="bc" onclick="goDetail('tribe')" data-cat="tribe">
-          <div class="bc-img" style="background:url('阿美族豐年祭.png') center/cover no-repeat"></div>
+          <div class="bc-img" style="background:url('assets/阿美族豐年祭.png') center/cover no-repeat"></div>
           <div class="bc-body">
             <div class="bc-name">阿美族豐年祭</div>
             <div class="bc-loc">花蓮・台東</div>
@@ -736,7 +767,7 @@ input[type=checkbox]{accent-color:var(--g3)}
           </div>
         </div>
         <div class="bc" onclick="goDetail('persimmon')" data-cat="fruit">
-          <div class="bc-img" style="background:url('柿子文化.png') center/cover no-repeat"></div>
+          <div class="bc-img" style="background:url('assets/柿子文化.png') center/cover no-repeat"></div>
           <div class="bc-body">
             <div class="bc-name">柿子文化</div>
             <div class="bc-loc">苗栗・新竹</div>
@@ -746,7 +777,7 @@ input[type=checkbox]{accent-color:var(--g3)}
           </div>
         </div>
         <div class="bc" onclick="goDetail('pineapple')" data-cat="fruit">
-          <div class="bc-img" style="background:url('鳳梨文化.png') center/cover no-repeat"></div>
+          <div class="bc-img" style="background:url('assets/鳳梨文化.png') center/cover no-repeat"></div>
           <div class="bc-body">
             <div class="bc-name">鳳梨文化</div>
             <div class="bc-loc">台南・屏東</div>
@@ -756,7 +787,7 @@ input[type=checkbox]{accent-color:var(--g3)}
           </div>
         </div>
         <div class="bc" onclick="goDetail('bamboo')" data-cat="craft">
-          <div class="bc-img" style="background:url('竹藝傳統工藝.png') center/cover no-repeat"></div>
+          <div class="bc-img" style="background:url('assets/竹藝傳統工藝.png') center/cover no-repeat"></div>
           <div class="bc-body">
             <div class="bc-name">竹藝傳統工藝</div>
             <div class="bc-loc">南投竹山・嘉義</div>
@@ -782,7 +813,7 @@ input[type=checkbox]{accent-color:var(--g3)}
 
     <!-- ═══ S3 DETAIL ═══ -->
     <div class="screen" id="s3">
-      <div class="d-hero" id="s3Hero" style="background:url('高山茶文化.png') center/cover no-repeat">
+      <div class="d-hero" id="s3Hero" style="background:url('assets/高山茶文化.png') center/cover no-repeat">
         <div class="d-ov"></div>
         <div id="s3Char" style="font-size:80px;font-weight:900;z-index:5;color:rgba(255,255,255,.85);display:none">茶</div>
         <div class="d-bk" onclick="back()">←</div>
@@ -863,7 +894,7 @@ input[type=checkbox]{accent-color:var(--g3)}
         <div style="padding:12px 20px;margin-bottom:4px">
           <div id="tripListCard" style="background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.06)">
             <div data-key="tea" onclick="currentCulture='tea';genTrip()" style="display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid var(--bd);cursor:pointer;-webkit-tap-highlight-color:transparent">
-              <div style="width:44px;height:44px;border-radius:10px;overflow:hidden;flex-shrink:0"><img src="高山茶文化.png" style="width:100%;height:100%;object-fit:cover"></div>
+              <div style="width:44px;height:44px;border-radius:10px;overflow:hidden;flex-shrink:0"><img src="assets/高山茶文化.png" style="width:100%;height:100%;object-fit:cover"></div>
               <div style="flex:1">
                 <div style="font-size:14px;font-weight:600">秋茶季 · 2天1夜</div>
                 <div style="font-size:11px;color:var(--t3);margin-top:2px">南投鹿谷 · 阿里山 · 10月</div>
@@ -871,7 +902,7 @@ input[type=checkbox]{accent-color:var(--g3)}
               <div style="font-size:12px;color:var(--g3);font-weight:600">查看</div>
             </div>
             <div data-key="rice" onclick="currentCulture='rice';genTrip()" style="display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid var(--bd);cursor:pointer;-webkit-tap-highlight-color:transparent">
-              <div style="width:44px;height:44px;border-radius:10px;overflow:hidden;flex-shrink:0"><img src="池上稻米文化.png" style="width:100%;height:100%;object-fit:cover"></div>
+              <div style="width:44px;height:44px;border-radius:10px;overflow:hidden;flex-shrink:0"><img src="assets/池上稻米文化.png" style="width:100%;height:100%;object-fit:cover"></div>
               <div style="flex:1">
                 <div style="font-size:14px;font-weight:600">池上稻米文化 · 1天</div>
                 <div style="font-size:11px;color:var(--t3);margin-top:2px">台東池上 · 10月</div>
@@ -1236,7 +1267,7 @@ input[type=checkbox]{accent-color:var(--g3)}
         <!-- 頭像區 -->
         <div style="text-align:center;padding:24px 20px 20px">
           <div style="width:72px;height:72px;border-radius:50%;overflow:hidden;margin:0 auto 10px;box-shadow:0 4px 12px rgba(160,120,48,.3)">
-            <img src="農民.png" style="width:100%;height:100%;object-fit:cover">
+            <img src="assets/農民.png" style="width:100%;height:100%;object-fit:cover">
           </div>
           <div style="font-size:18px;font-weight:800">王大明</div>
           <div style="font-size:12px;color:var(--t3);margin-top:2px">農民 · 南投縣鹿谷鄉</div>
@@ -1357,7 +1388,7 @@ input[type=checkbox]{accent-color:var(--g3)}
             <div style="font-size:12px;color:var(--t3);font-weight:600;margin-bottom:6px">產品圖片</div>
             <div id="s11ImgRow" style="display:flex;gap:8px;flex-wrap:wrap">
               <div style="width:72px;height:72px;border-radius:10px;overflow:hidden;flex-shrink:0">
-                <img src="高山茶文化.png" style="width:100%;height:100%;object-fit:cover">
+                <img src="assets/高山茶文化.png" style="width:100%;height:100%;object-fit:cover">
               </div>
               <div onclick="document.getElementById('s11FileInput').click()" style="width:72px;height:72px;border-radius:10px;border:1.5px dashed #bbb;display:grid;place-items:center;cursor:pointer;flex-shrink:0;-webkit-tap-highlight-color:transparent;background:var(--cream)">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
@@ -1489,7 +1520,7 @@ input[type=checkbox]{accent-color:var(--g3)}
       <div style="padding:0 20px;display:flex;flex-direction:column;gap:12px">
         <!-- 活動卡 1 -->
         <div style="background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.06)">
-          <div style="height:160px;background:url('高山茶文化.png') center 30%/cover no-repeat;position:relative">
+          <div style="height:160px;background:url('assets/高山茶文化.png') center 30%/cover no-repeat;position:relative">
             <div style="position:absolute;inset:0;background:rgba(0,0,0,.25);border-radius:0"></div>
             <span style="position:absolute;top:8px;right:10px;background:rgba(255,255,255,.9);border-radius:99px;padding:3px 8px;font-size:10px;font-weight:700;color:var(--g2)">已發布</span>
           </div>
@@ -1507,7 +1538,7 @@ input[type=checkbox]{accent-color:var(--g3)}
         </div>
         <!-- 活動卡 2 -->
         <div style="background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.06)">
-          <div style="height:160px;background:url('高山茶文化.png') center 70%/cover no-repeat;position:relative">
+          <div style="height:160px;background:url('assets/高山茶文化.png') center 70%/cover no-repeat;position:relative">
             <div style="position:absolute;inset:0;background:rgba(0,0,0,.25);border-radius:0"></div>
             <span style="position:absolute;top:8px;right:10px;background:rgba(255,255,255,.9);border-radius:99px;padding:3px 8px;font-size:10px;font-weight:700;color:var(--g2)">已發布</span>
           </div>
@@ -1965,7 +1996,7 @@ const savedCultures = new Set(['tea','rice']);
 function makeTripRow(key){
   const t = TRIP_DATA[key];
   const det = DETAIL_DATA[key] || DETAIL_DATA.tea;
-  const img = det.img || '高山茶文化.png';
+  const img = det.img || 'assets/高山茶文化.png';
   const sub = t.mapPoints.slice(1).map(p=>p.label).join(' · ') + ' · ' + t.tags[0];
   const row = document.createElement('div');
   row.dataset.key = key;
@@ -2046,7 +2077,7 @@ function genTrip(){
 
 const DETAIL_DATA = {
   tea: {
-    bg:'linear-gradient(160deg,#1e4d1a,#4a8c3f)', img:'高山茶文化.png', char:'茶', title:'高山茶文化',
+    bg:'linear-gradient(160deg,#1e4d1a,#4a8c3f)', img:'assets/高山茶文化.png', char:'茶', title:'高山茶文化',
     chips:['秋茶季','南投・阿里山','海拔 1000m+'],
     ai:'台灣高山茶文化發展於清末，在海拔 1000m 以上的山區種植。每年秋茶季（9–11月），晝夜溫差讓茶葉積累出獨特甘甜與茶香。採茶是純手工作業，一名熟練茶農一天僅能採約 3 公斤，是兼具農業智慧與文化意義的傳統。',
     src:'資料來源：農業部茶及飲料作物改良場 2023・台灣茶葉產銷年報', qr:true,
@@ -2055,7 +2086,7 @@ const DETAIL_DATA = {
     cta:'生成茶文化體驗行程', mapNav:'南投鹿谷茶園'
   },
   rice: {
-    bg:'linear-gradient(160deg,#4a3a00,#a07830)', img:'池上稻米文化.png', char:'稻', title:'池上稻米文化',
+    bg:'linear-gradient(160deg,#4a3a00,#a07830)', img:'assets/池上稻米文化.png', char:'稻', title:'池上稻米文化',
     chips:['秋收','台東池上','海拔 280m'],
     ai:'池上鄉位於台東縱谷，四面環山、水質清澈，是台灣最著名的有機米產區。每年10月二期稻作收割，金黃稻浪搖曳，成為台灣秋天最美的農業景觀。池上米採傳統農法，粒粒飽滿，是台灣米食文化的代表，日本料理人也慕名而來。',
     src:'資料來源：農業部農糧署 2023・台東縣池上鄉農會年報', qr:true,
@@ -2064,7 +2095,7 @@ const DETAIL_DATA = {
     cta:'生成稻米文化體驗行程', mapNav:'台東池上稻田'
   },
   tribe: {
-    bg:'linear-gradient(160deg,#7b3300,#d45800)', img:'阿美族豐年祭.png', char:'祭', title:'阿美族豐年祭',
+    bg:'linear-gradient(160deg,#7b3300,#d45800)', img:'assets/阿美族豐年祭.png', char:'祭', title:'阿美族豐年祭',
     chips:['7–8月','花蓮・台東','原住民文化'],
     ai:'豐年祭是阿美族一年中最重要的傳統祭典，通常在七、八月舉行，歷時 3–7 天。祭典包含歌舞、祈福儀式和傳統服飾展示，是族人聯繫情感、感謝豐收的重要時刻。參與豐年祭，能深刻感受台灣原住民千年農耕文化的精髓。',
     src:'資料來源：原住民族委員會 2023・阿美族文化資產紀錄', qr:false,
@@ -2073,7 +2104,7 @@ const DETAIL_DATA = {
     cta:'生成原住民文化體驗行程', mapNav:'花蓮阿美族豐年祭部落'
   },
   persimmon: {
-    bg:'linear-gradient(160deg,#7b1a00,#c0392b)', img:'柿子文化.png', char:'柿', title:'柿子文化',
+    bg:'linear-gradient(160deg,#7b1a00,#c0392b)', img:'assets/柿子文化.png', char:'柿', title:'柿子文化',
     chips:['10–11月','苗栗・新竹','曬柿餅'],
     ai:'台灣柿子文化以苗栗大湖、新竹新埔最具代表性。每年秋天，農家將收成的柿子削皮風乾，製成柿餅，架上曬台的金橘色柿子景觀成為台灣秋天的代表風景。新埔柿餅已有 200 年歷史，是客家農村文化的重要傳承。',
     src:'資料來源：苗栗縣農業處 2023・台灣柿子產業年報', qr:false,
@@ -2082,7 +2113,7 @@ const DETAIL_DATA = {
     cta:'生成柿子文化體驗行程', mapNav:'新竹新埔柿餅農場'
   },
   pineapple: {
-    bg:'linear-gradient(160deg,#2d5a00,#78b44a)', img:'鳳梨文化.png', char:'鳳', title:'鳳梨文化',
+    bg:'linear-gradient(160deg,#2d5a00,#78b44a)', img:'assets/鳳梨文化.png', char:'鳳', title:'鳳梨文化',
     chips:['5–8月','台南・屏東','熱帶果物'],
     ai:'鳳梨是台灣重要的熱帶水果之一，台南關廟、屏東內埔為主要產區。台灣鳳梨品種多樣，從金鑽到土鳳梨各具特色。鳳梨不僅是鮮果，更衍生出鳳梨酥等台灣代表性食品文化，年產值超過 30 億台幣。',
     src:'資料來源：農業部農糧署 2023・台灣鳳梨產業統計', qr:false,
@@ -2091,7 +2122,7 @@ const DETAIL_DATA = {
     cta:'生成鳳梨文化體驗行程', mapNav:'台南關廟鳳梨農場'
   },
   bamboo: {
-    bg:'linear-gradient(160deg,#1a237e,#3949ab)', img:'竹藝傳統工藝.png', char:'竹', title:'竹藝傳統工藝',
+    bg:'linear-gradient(160deg,#1a237e,#3949ab)', img:'assets/竹藝傳統工藝.png', char:'竹', title:'竹藝傳統工藝',
     chips:['全年','南投竹山・嘉義','傳統工藝'],
     ai:'南投竹山素有「竹之鄉」之稱，是台灣竹藝的重要產地。台灣竹藝匠師以孟宗竹、桂竹為材，編製籃、籮、器具，既實用又具美感，是閩南農村生活文化的縮影。目前竹山有 30 餘位在地竹藝師傅持續傳承這項古老工藝。',
     src:'資料來源：南投縣文化局 2023・竹山竹藝文化調查報告', qr:false,
@@ -2338,6 +2369,79 @@ function toggleSave(){
   showToast(isSaved?'已加入我的行程':'已取消收藏');
 }
 document.getElementById('cinput').addEventListener('keydown',e=>{ if(e.key==='Enter')sendMsg(); });
+
+// ── Onboarding Tour ──
+const TOUR_STEPS = [
+  { icon:'👋', title:'歡迎使用台灣農業文化導覽', body:'這個 App 帶你探索台灣在地的農業文化與傳統工藝。讓我們用 30 秒快速介紹主要功能！', target: null },
+  { icon:'🏠', title:'首頁', body:'首頁整合了當季農業活動、推薦文化體驗，以及 AI 智慧推薦，讓你不錯過任何精彩內容。', target: 'tour-tab-home' },
+  { icon:'🔍', title:'瀏覽', body:'可以依地區、季節、類型篩選台灣各地的農業文化景點與體驗，找到最適合你的行程。', target: 'tour-tab-browse' },
+  { icon:'📷', title:'掃描', body:'到現場時掃描 QR 碼，即可獲得深度文化解說、在地故事與農業知識。', target: 'tour-tab-scan' },
+  { icon:'📅', title:'行程規劃', body:'把喜歡的文化體驗加入行程，App 自動幫你規劃路線與時程。', target: 'tour-tab-trip' },
+  { icon:'🎉', title:'開始探索吧！', body:'你已經準備好了！有任何問題可以隨時點右下角的 AI 助手。', target: null },
+];
+
+let tourStep = 0;
+
+function startTour() {
+  tourStep = 0;
+  renderTourStep();
+  document.getElementById('tourOverlay').classList.add('show');
+}
+
+function renderTourStep() {
+  const step = TOUR_STEPS[tourStep];
+  document.getElementById('ttIcon').textContent = step.icon;
+  document.getElementById('ttTitle').textContent = step.title;
+  document.getElementById('ttBody').textContent = step.body;
+  document.getElementById('ttNext').textContent = tourStep === TOUR_STEPS.length - 1 ? '開始使用 🎉' : '下一步';
+
+  // dots
+  const dots = document.getElementById('ttDots');
+  dots.innerHTML = TOUR_STEPS.map((_,i) => `<div class="tt-dot${i===tourStep?' on':''}"></div>`).join('');
+
+  // spotlight
+  const spot = document.getElementById('tourSpotlight');
+  const tip = document.getElementById('tourTooltip');
+  if (step.target) {
+    const el = document.getElementById(step.target);
+    if (el) {
+      const r = el.getBoundingClientRect();
+      const phoneR = document.querySelector('.screen-area').getBoundingClientRect();
+      const top = r.top - phoneR.top - 6;
+      const left = r.left - phoneR.left - 8;
+      spot.style.cssText = `top:${top}px;left:${left}px;width:${r.width+16}px;height:${r.height+12}px;opacity:1`;
+      // tooltip above or below
+      if (top > 200) {
+        tip.style.bottom = '110px'; tip.style.top = '';
+      } else {
+        tip.style.top = (top + r.height + 30) + 'px'; tip.style.bottom = '';
+      }
+    }
+  } else {
+    spot.style.cssText = 'opacity:0;top:50%;left:50%;width:0;height:0';
+    tip.style.bottom = '110px'; tip.style.top = '';
+  }
+}
+
+function tourNext() {
+  tourStep++;
+  if (tourStep >= TOUR_STEPS.length) { endTour(); return; }
+  renderTourStep();
+}
+
+function endTour() {
+  document.getElementById('tourOverlay').classList.remove('show');
+  localStorage.setItem('tourDone', '1');
+}
+
+// Hook into go() to trigger tour on first arrival at s2
+const _origGo = go;
+go = function(id) {
+  _origGo(id);
+  if (id === 's2' && !localStorage.getItem('tourDone') && !document.getElementById('tourOverlay').classList.contains('show')) {
+    setTimeout(startTour, 400);
+  }
+};
 </script>
 </body>
 </html>
