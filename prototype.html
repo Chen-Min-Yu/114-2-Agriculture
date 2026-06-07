@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>農業文化體驗 App 原型</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -2372,12 +2373,12 @@ document.getElementById('cinput').addEventListener('keydown',e=>{ if(e.key==='En
 
 // ── Onboarding Tour ──
 const TOUR_STEPS = [
-  { icon:'👋', title:'歡迎使用台灣農業文化導覽', body:'這個 App 帶你探索台灣在地的農業文化與傳統工藝。讓我們用 30 秒快速介紹主要功能！', target: null },
-  { icon:'🏠', title:'首頁', body:'首頁整合了當季農業活動、推薦文化體驗，以及 AI 智慧推薦，讓你不錯過任何精彩內容。', target: 'tour-tab-home' },
-  { icon:'🔍', title:'瀏覽', body:'可以依地區、季節、類型篩選台灣各地的農業文化景點與體驗，找到最適合你的行程。', target: 'tour-tab-browse' },
-  { icon:'📷', title:'掃描', body:'到現場時掃描 QR 碼，即可獲得深度文化解說、在地故事與農業知識。', target: 'tour-tab-scan' },
-  { icon:'📅', title:'行程規劃', body:'把喜歡的文化體驗加入行程，App 自動幫你規劃路線與時程。', target: 'tour-tab-trip' },
-  { icon:'🎉', title:'開始探索吧！', body:'你已經準備好了！有任何問題可以隨時點右下角的 AI 助手。', target: null },
+  { icon:'<span class="iconify" data-icon="fluent:hand-wave-24-filled" style="font-size:36px;color:var(--g3)"></span>', title:'歡迎使用台灣農業文化導覽', body:'這個 App 帶你探索台灣在地的農業文化與傳統工藝。讓我們用 30 秒快速介紹主要功能！', target: null },
+  { icon:'<span class="iconify" data-icon="fluent:home-24-filled" style="font-size:36px;color:var(--g3)"></span>', title:'首頁', body:'首頁整合了當季農業活動、推薦文化體驗，以及 AI 智慧推薦，讓你不錯過任何精彩內容。', target: 'tour-tab-home' },
+  { icon:'<span class="iconify" data-icon="fluent:globe-search-24-filled" style="font-size:36px;color:var(--g3)"></span>', title:'瀏覽', body:'可以依地區、季節、類型篩選台灣各地的農業文化景點與體驗，找到最適合你的行程。', target: 'tour-tab-browse' },
+  { icon:'<span class="iconify" data-icon="fluent:qr-code-24-filled" style="font-size:36px;color:var(--g3)"></span>', title:'掃描', body:'到現場時掃描 QR 碼，即可獲得深度文化解說、在地故事與農業知識。', target: 'tour-tab-scan' },
+  { icon:'<span class="iconify" data-icon="fluent:calendar-agenda-24-filled" style="font-size:36px;color:var(--g3)"></span>', title:'行程規劃', body:'把喜歡的文化體驗加入行程，App 自動幫你規劃路線與時程。', target: 'tour-tab-trip' },
+  { icon:'<span class="iconify" data-icon="fluent:rocket-24-filled" style="font-size:36px;color:var(--g3)"></span>', title:'開始探索吧！', body:'你已經準備好了！有任何問題可以隨時點右下角的 AI 助手。', target: null },
 ];
 
 let tourStep = 0;
@@ -2390,7 +2391,7 @@ function startTour() {
 
 function renderTourStep() {
   const step = TOUR_STEPS[tourStep];
-  document.getElementById('ttIcon').textContent = step.icon;
+  document.getElementById('ttIcon').innerHTML = step.icon;
   document.getElementById('ttTitle').textContent = step.title;
   document.getElementById('ttBody').textContent = step.body;
   document.getElementById('ttNext').textContent = tourStep === TOUR_STEPS.length - 1 ? '開始使用 🎉' : '下一步';
